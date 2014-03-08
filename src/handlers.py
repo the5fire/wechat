@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import os
 import json
 import hashlib
+import sqlite3
 from datetime import datetime
 
 import web
@@ -18,6 +19,15 @@ loader = FileSystemLoader(TEMPLATE_PATH)
 lookup = Environment(loader=loader)
 
 session = web.config._session
+
+
+def sha1(data):
+    return hashlib.sha1(data).hexdigest()
+
+
+def bad_request(message):
+    result = json.dumps({'message': message})
+    raise web.HTTPError(status=400, data=result)
 
 
 # 首页
@@ -36,16 +46,18 @@ class RegisteHandler:
         password_repeat = data.get("password_repeat")
 
         if password != password_repeat:
-            result = json.dumps({'message': '两次密码输入不一致'})
-            raise web.HTTPError(status=400, data=result)
+            return bad_request('两次密码输入不一致')
 
         user_data = {
             "username": username,
-            "password": hashlib.sha1(password).hexdigest(),
+            "password": sha1(password),
             "registed_time": datetime.now(),
         }
 
-        user_id = User.create(**user_data)
+        try:
+            user_id = User.create(**user_data)
+        except sqlite3.IntegrityError:
+            return bad_request('用户名已存在!')
 
         result = {
             'user_id': user_id,
@@ -56,7 +68,23 @@ class RegisteHandler:
 
 class LoginHandler:
     def POST(self):
-        pass
+        data = web.data()
+        data = json.loads(data)
+        username = data.get("username")
+        password = data.get("password")
+        user = User.get_by_username_password(
+            username=username,
+            password=sha1(password)
+        )
+        if not user:
+            return bad_request('用户名或密码错误！')
+
+        session.login = True
+        result = {
+            'user_id': user.get('id'),
+            'username': user.get('username'),
+        }
+        return json.dumps(result)
 
 
 class LogoutHandler:

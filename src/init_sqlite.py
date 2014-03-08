@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS user(
     "id" integer PRIMARY KEY AUTOINCREMENT,
     "username" varchar(20) NOT NULL,
     "password" varchar(50) NOT NULL,
-    "registed_time" datetime NOT NULL
+    "registed_time" datetime NOT NULL,
+    UNIQUE ("username")
 );
 CREATE TABLE IF NOT EXISTS topic(
     "id" integer PRIMARY KEY AUTOINCREMENT,

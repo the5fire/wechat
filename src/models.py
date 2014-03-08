@@ -19,6 +19,11 @@ class DBManage(object):
         return next(iter(itertodo), None)
 
     @classmethod
+    def get_by_username_password(cls, username, password):
+        itertodo = db.select(cls.table(), where="username=$username and password=$password", vars=locals())
+        return next(iter(itertodo), None)
+
+    @classmethod
     def get_all(cls):
         # inspect.ismethod(cls.get_all)
         return db.select(cls.table())
