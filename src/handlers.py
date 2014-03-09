@@ -98,10 +98,7 @@ class LogoutHandler:
 class TopicHandler:
     def GET(self):
         topics = Topic.get_all()
-        result = []
-        for topic in topics:
-            print topic
-            result.append(topic)
+        result = [t for t in topics]
         return json.dumps(result)
 
     def POST(self):
@@ -125,7 +122,7 @@ class TopicHandler:
             "id": topic_id,
             "title": topic_data.get('title'),
             "owner_id": session.user.id,
-            "created_time": topic_data.get('created_time'),
+            "created_time": str(topic_data.get('created_time')),
         }
         return json.dumps(result)
 
@@ -139,8 +136,33 @@ class TopicHandler:
 
 class MessageHandler:
     def GET(self):
-        return json.dumps({})
+        topic_id = web.input().get('topic_id')
+        if topic_id:
+            messages = Message.get_by_topic(topic_id) or []
+        else:
+            messages = Message.get_all()
+        result = [m for m in messages]
+        return json.dumps(result)
 
     def POST(self):
         data = web.data()
-        print data
+        data = json.loads(data)
+        if not (session.user and session.user.id):
+            return bad_request("请先登录！")
+
+        message_data = {
+            "content": data.get("content"),
+            "topic_id": data.get("topic_id"),
+            "user_id": session.user.id,
+            "created_time": datetime.now(),
+        }
+        m_id = Message.create(**message_data)
+        result = {
+            "id": m_id,
+            "content": message_data.get("content"),
+            "topic_id": message_data.get("topic_id"),
+            "user_id": session.user.id,
+            "user_name": session.user.username,
+            "created_time": str(message_data.get("created_time")),
+        }
+        return json.dumps(result)

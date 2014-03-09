@@ -18,10 +18,6 @@ class DBManage(object):
         # 参考：https://groups.google.com/forum/#!msg/webpy/PP81l8C5kbQ/90Hgx3HUqG0J
         return next(iter(itertodo), None)
 
-    @classmethod
-    def get_by_username_password(cls, username, password):
-        itertodo = db.select(cls.table(), where="username=$username and password=$password", vars=locals())
-        return next(iter(itertodo), None)
 
     @classmethod
     def get_all(cls):
@@ -47,6 +43,11 @@ class User(DBManage):
     password = None
     registed_time = None
 
+    @classmethod
+    def get_by_username_password(cls, username, password):
+        itertodo = db.select(cls.table(), where="username=$username and password=$password", vars=locals())
+        return next(iter(itertodo), None)
+
 
 class Topic(DBManage):
     id = None
@@ -61,3 +62,7 @@ class Message(DBManage):
     top_id = None
     user_id = None
     reply_to = None
+
+    @classmethod
+    def get_by_topic(cls, topic_id):
+        return db.select(cls.table(), where="topic_id=$topic_id", vars=locals())
