@@ -80,8 +80,9 @@ class LoginHandler:
             return bad_request('用户名或密码错误！')
 
         session.login = True
+        session.user = user
         result = {
-            'user_id': user.get('id'),
+            'id': user.get('id'),
             'username': user.get('username'),
         }
         return json.dumps(result)
@@ -90,17 +91,43 @@ class LoginHandler:
 class LogoutHandler:
     def POST(self):
         session.login = False
+        session.user = None
         return json.dumps({"message": "success"})
 
 
 class TopicHandler:
     def GET(self):
-        result = {}
+        topics = Topic.get_all()
+        result = []
+        for topic in topics:
+            print topic
+            result.append(topic)
         return json.dumps(result)
 
     def POST(self):
         data = web.data()
-        print data
+        data = json.loads(data)
+        if not session.user.id:
+            return bad_request('请先登录！')
+
+        topic_data = {
+            "title": data.get('title'),
+            "owner_id": session.user.id,
+            "created_time": datetime.now(),
+        }
+
+        try:
+            topic_id = Topic.create(**topic_data)
+        except sqlite3.IntegrityError:
+            return bad_request('你已创建过该名称!')
+
+        result = {
+            "id": topic_id,
+            "title": topic_data.get('title'),
+            "owner_id": session.user.id,
+            "created_time": topic_data.get('created_time'),
+        }
+        return json.dumps(result)
 
     def PUT(self, obj_id=None):
         data = web.data()

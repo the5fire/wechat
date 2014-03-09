@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS topic(
     "id" integer PRIMARY KEY AUTOINCREMENT,
     "title" varchar(20) NOT NULL,
     "created_time" datetime NOT NULL,
-    "owner_id" integer NOT NULL
+    "owner_id" integer NOT NULL,
+    UNIQUE ("title", 'owner_id')
 );
 CREATE TABLE IF NOT EXISTS message(
     "id" integer PRIMARY KEY AUTOINCREMENT,
