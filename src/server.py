@@ -21,13 +21,13 @@ if web.config.get('_session') is None:
     session = web.session.Session(
         app,
         web.session.DiskStore('sessions'),
-        initializer={'login': False}
+        initializer={'login': False, 'user': None}
     )
     web.config._session = session
 
 from handlers import (  # NOQA
-    IndexHandler,
-    LoginHandler, LogoutHandler, RegisteHandler,
+    IndexHandler, RegisteHandler,
+    LoginHandler, LogoutHandler,
     TopicHandler, MessageHandler
 )
 
