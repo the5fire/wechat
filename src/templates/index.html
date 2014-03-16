@@ -29,50 +29,14 @@
 </div>
 
 <!-- Content -->
-<div class="main container">
+<div id="main" class="main container">
 
     <!-- Topic List -->
-    <div class="ui three column grid">
-        <div class="column">
-            <div class="ui segment">
-                <h3>Python基础</h3>
-                <p>
-                创建者：11
-                创建时间：2014-03-04
-                </p>
-            </div>
-        </div>
-        <div class="column">
-            <div class="ui segment">
-                <h3>Python基础</h3>
-                <p>
-                创建者：11
-                创建时间：2014-03-04
-                </p>
-            </div>
-        </div>
-        <div class="column">
-            <div class="ui segment">
-                <h3>Python基础</h3>
-                <p>
-                创建者：11
-                创建时间：2014-03-04
-                </p>
-            </div>
-        </div>
-        <div class="column">
-            <div class="ui segment">
-                <h3>Python基础</h3>
-                <p>
-                创建者：11
-                创建时间：2014-03-04
-                </p>
-            </div>
-        </div>
+    <div id="topic_list" class="ui three column grid">
     </div>
 
     <!-- Message -->
-    <div class="ui column grid">
+    <div id="message_list" class="ui column grid">
         <div class="column">
             <div class="ui piled blue segment">
                 <h2 class="ui header">
@@ -105,19 +69,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="comment" style="float:right">
-                        <div class="content">
-                            <a class="author" style="float:right">华寅</a>
-                            <div class="metadata" style="float:right">
-                                <span class="date">2天前</span>
-                            </div>
-                            <div class="text">
-                                <div class="ui pointing right label large">
-                                    <p>这是一个和内容宽度一样的消息控件。</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <form class="ui reply form">
                         <div class="field">
                             <textarea></textarea>
@@ -132,6 +83,37 @@
     </div>
 
 
+<script type="text/template" id="topic-template">
+    <a href="#topic/<%= id %>">
+        <div class="column">
+            <div class="ui segment">
+                <h3><%= title %></h3>
+                <p>
+                创建者：<%= owner %>
+                </p>
+                <p>
+                创建时间：<%= created_time %>
+                </p>
+            </div>
+        </div>
+    </a>
+</script>
+
+<script type="text/template" id="topic-template">
+    <div class="comment <%= is_mine >">
+        <div class="content">
+            <a class="author <%= is_mine %>"><%= user_id %></a>
+            <div class="metadata <%= is_mine %>">
+                <span class="date"><%= created_time %></span>
+            </div>
+            <div class="text">
+                <div class="ui pointing right label large">
+                    <p><%= content %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
 
 </div>
     <footer>

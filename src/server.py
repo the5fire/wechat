@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 #coding:utf-8
-from __future__ import absolute_import
-
 import web
+from web.httpserver import StaticMiddleware
 
 urls = (
     '/', 'IndexHandler',  # 返回首页
     '/topic', 'TopicHandler',
     '/message', 'MessageHandler',
-    '/registe', 'RegisteHandler',
+    '/user', 'RegisteHandler',
     '/login', 'LoginHandler',
     '/logout', 'LogoutHandler',
 )
 
 app = web.application(urls, globals())
-from web.httpserver import StaticMiddleware
 application = app.wsgifunc(StaticMiddleware)
 
 if web.config.get('_session') is None:

@@ -1,13 +1,10 @@
 #coding:utf-8
-import inspect
-
 import web
 
 db = web.database(dbn='sqlite', db="wechat.db")
 
 
 class DBManage(object):
-    # TODO: 改成objects吧
     @classmethod
     def table(cls):
         return cls.__name__.lower()
@@ -51,7 +48,7 @@ class User(DBManage):
 
 class Topic(DBManage):
     id = None
-    name = None
+    title = None
     created_time = None
     owner = None
 

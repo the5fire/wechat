@@ -88,7 +88,14 @@ class LogoutHandler:
 class TopicHandler:
     def GET(self):
         topics = Topic.get_all()
-        result = [t for t in topics]
+        result = []
+        for t in topics:
+            result.append({
+                "id": t.id,
+                "title": t.title,
+                "owner": t.owner_id,
+                "created_time": t.created_time
+            })
         return json.dumps(result)
 
     def POST(self):
