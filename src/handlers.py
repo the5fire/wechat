@@ -1,22 +1,12 @@
 #coding:utf-8
-from __future__ import absolute_import
-
-import os
 import json
 import hashlib
 import sqlite3
 from datetime import datetime
 
 import web
-from jinja2 import Environment, FileSystemLoader
 
 from models import Message, User, Topic
-
-RUN_PATH = os.path.abspath(os.path.dirname(__file__))
-TEMPLATE_PATH = os.path.join(RUN_PATH, 'templates')
-
-loader = FileSystemLoader(TEMPLATE_PATH)
-lookup = Environment(loader=loader)
 
 session = web.config._session
 
@@ -33,8 +23,8 @@ def bad_request(message):
 # 首页
 class IndexHandler:
     def GET(self):
-        t = lookup.get_template('index.html')
-        return t.render()
+        render = web.template.render('templates/')
+        return render.index()
 
 
 class RegisteHandler:
