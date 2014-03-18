@@ -86,16 +86,18 @@ class LogoutHandler:
 
 
 class TopicHandler:
-    def GET(self):
+    def GET(self, pk=None):
+        if pk:
+            topic = Topic.get_by_id(pk)
+            return json.dumps(topic)
+
         topics = Topic.get_all()
         result = []
         for t in topics:
-            result.append({
-                "id": t.id,
-                "title": t.title,
-                "owner": t.owner_id,
-                "created_time": t.created_time
-            })
+            topic = dict(t)
+            user = User.get_by_id(t.owner_id)
+            topic['owner_name'] = user.username
+            result.append(topic)
         return json.dumps(result)
 
     def POST(self):
@@ -138,7 +140,13 @@ class MessageHandler:
             messages = Message.get_by_topic(topic_id) or []
         else:
             messages = Message.get_all()
-        result = [m for m in messages]
+
+        result = []
+        for m in messages:
+            user = User.get_by_id(m.user_id)
+            message = dict(m)
+            message['user_name'] = user.username
+            result.append(message)
         return json.dumps(result)
 
     def POST(self):

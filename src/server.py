@@ -6,8 +6,10 @@ from web.httpserver import StaticMiddleware
 urls = (
     '/', 'IndexHandler',  # 返回首页
     '/topic', 'TopicHandler',
+    '/topic/(\d+)', 'TopicHandler',
     '/message', 'MessageHandler',
     '/user', 'RegisteHandler',
+    '/user/(\d+)', 'RegisteHandler',
     '/login', 'LoginHandler',
     '/logout', 'LogoutHandler',
 )

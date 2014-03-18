@@ -21,6 +21,11 @@ $(function(){
         model: Topic,
     });
 
+    var Messages = Backbone.Collection.extend({
+        url: '/message',
+        model: Message,
+    });
+
     var topics = new Topics;
 
     var TopicView = Backbone.View.extend({
@@ -34,70 +39,97 @@ $(function(){
         },
     });
 
+    var messages = new Messages;
+
+    var MessageView = Backbone.View.extend({
+        tagName:  "div class='comment'",
+        templ: _.template($('#message-template').html()),
+
+        // 渲染列表页模板
+        render: function() {
+          $(this.el).html(this.templ(this.model.toJSON()));
+          return this;
+        },
+    });
+
+
     var AppView = Backbone.View.extend({
         el: "#main",
         topic_list: $("#topic_list"),
-        loader: $('#loader'),
+        message_section: $("#message_section"),
+        message_list: $("#message_list"),
+        message_head: $("#message_head"),
 
         initialize: function() {
-          //下面这个是underscore库中的方法，用来绑定方法到目前的这个对象中，是为了在以后运行环境中调用当前对象的时候能够找到对象中的这些方法。
-          _.bindAll(this, 'reset', 'addOne', 'addAll', 'render');
+          _.bindAll(this, 'addTopic', 'addMessage');
 
-          topics.bind('add',     this.addOne);
-          topics.bind('reset',   this.reset);
-          topics.bind('all',     this.render);
-
-          this.loader.show();
-
-          topics.fetch({reset: true});  // 设置fetch完之后reset
-          this.loadRounter = false;
+          topics.bind('add', this.addTopic);
+          messages.bind('add', this.addMessage);
         },
 
-        events: {
-            'click .next_page': 'nextPage',
-        },
-
-        render: function(id) {
-            console.log('app view' + id);
-        }, 
-
-        addOne: function(topic) {
+        addTopic: function(topic) {
           var view = new TopicView({model: topic});
           this.topic_list.append(view.render().el);
         },
 
-        addAll: function() {
-            topics.each(this.addOne);
+        addMessage: function(message) {
+          var view = new MessageView({model: message});
+          this.message_list.append(view.render().el);
         },
 
-        reset: function(){
-            this.addAll();
-            if(!this.loadRounter){
-                // 激活路由
-                this.loadRounter = true;
-                this.app_router = new AppRouter;
-                Backbone.history.start({pustState: true});
-                //this.app_router.navigate("home");
-            }
-            this.loader.hide();
+        showTopic: function(){
+            topics.fetch();
+            this.topic_list.show();
+            this.message_section.hide();
+        },
+
+        showMessage: function(topic_id) {
+            this.message_section.show();
+            this.topic_list.hide();
+            
+            this.showMessageHead(topic_id);
+
+            messages.fetch({url: '/message?topic_id=' + topic_id});
+        },
+
+        showMessageHead: function(topic_id) {
+            var topic = new Topic({id: topic_id});
+            self = this;
+            topic.fetch({
+                success: function(resp, model, options){
+                    self.message_head.html(model.title);
+                }
+            });
         },
     });
 
-    var App = new AppView;
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            "home": "home",
-            "Topic/:id" : "showTopic",
+            "index": "index",
+            "topic/:id" : "topic",
         },
 
-        home: function(){
-            App.loader.hide();
-            $('#nexter').show();
+        initialize: function(){
+            // 初始化项目, 显示首页
+            this.appView = new AppView();
         },
 
-        showTopic: function(id) {
-            alert('show topic' + id);
+        index: function(){
+            this.indexFlag = true;
+            this.appView.showTopic();
+        },
+
+        topic: function(topic_id) {
+            this.indexFlag = true;
+            this.appView.showMessage(topic_id);
         },
     });
+
+    var appRouter = new AppRouter();
+    appRouter.indexFlag = false;
+    Backbone.history.start({pustState: true});
+    if(appRouter.indexFlag == false) {
+        appRouter.navigate('index', {trigger: true});
+    }
 });
