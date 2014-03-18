@@ -61,10 +61,12 @@ $(function(){
         message_head: $("#message_head"),
 
         initialize: function() {
-          _.bindAll(this, 'addTopic', 'addMessage');
+          _.bindAll(this, 'addTopic', 'resetMessage', 'addMessage');
 
           topics.bind('add', this.addTopic);
+
           messages.bind('add', this.addMessage);
+          messages.bind('reset', this.resetMessage);
         },
 
         addTopic: function(topic) {
@@ -77,10 +79,15 @@ $(function(){
           this.message_list.append(view.render().el);
         },
 
+        resetMessage: function(){
+            messages.each(this.addMessage);
+        },
+
         showTopic: function(){
             topics.fetch();
             this.topic_list.show();
             this.message_section.hide();
+            this.message_list.html('');
         },
 
         showMessage: function(topic_id) {
@@ -89,7 +96,10 @@ $(function(){
             
             this.showMessageHead(topic_id);
 
-            messages.fetch({url: '/message?topic_id=' + topic_id});
+            messages.fetch({
+                url: '/message?topic_id=' + topic_id,
+                reset: true,
+            });
         },
 
         showMessageHead: function(topic_id) {
