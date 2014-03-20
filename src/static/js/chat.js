@@ -60,6 +60,10 @@ $(function(){
         message_list: $("#message_list"),
         message_head: $("#message_head"),
 
+        events: {
+            'click .submit': 'saveMessage',
+        },
+
         initialize: function() {
           _.bindAll(this, 'addTopic', 'resetMessage', 'addMessage');
 
@@ -83,6 +87,26 @@ $(function(){
             messages.each(this.addMessage);
         },
 
+        saveMessage: function(evt) {
+            var comment_box = $('#comment')
+            var content = comment_box.val();
+            if (content == '') {
+                alert('内容不能为空');
+                return false;
+            }
+            var topic_id = $(evt.target).attr('topic_id');
+            var message = new Message({
+                content: content,
+                topic_id: topic_id,
+            });
+            message.save(null, {
+                success: function(model, response, options){
+                    messages.add(response);
+                    comment_box.val('');
+                },
+            });
+        },
+
         showTopic: function(){
             topics.fetch();
             this.topic_list.show();
@@ -95,6 +119,7 @@ $(function(){
             this.topic_list.hide();
             
             this.showMessageHead(topic_id);
+            $('#submit').attr('topic_id', topic_id);
 
             messages.fetch({
                 url: '/message?topic_id=' + topic_id,

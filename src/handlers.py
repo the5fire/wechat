@@ -146,19 +146,20 @@ class MessageHandler:
             user = User.get_by_id(m.user_id)
             message = dict(m)
             message['user_name'] = user.username
+            message['is_mine'] = (session.user == user)
             result.append(message)
         return json.dumps(result)
 
     def POST(self):
         data = web.data()
         data = json.loads(data)
-        if not (session.user and session.user.id):
-            return bad_request("请先登录！")
+        #if not (session.user and session.user.id):
+            #return bad_request("请先登录！")
 
         message_data = {
             "content": data.get("content"),
             "topic_id": data.get("topic_id"),
-            "user_id": session.user.id,
+            "user_id": 1,  # session.user.id,
             "created_time": datetime.now(),
         }
         m_id = Message.create(**message_data)
@@ -166,8 +167,9 @@ class MessageHandler:
             "id": m_id,
             "content": message_data.get("content"),
             "topic_id": message_data.get("topic_id"),
-            "user_id": session.user.id,
-            "user_name": session.user.username,
+            "user_id": 1,  # session.user.id,
+            "user_name": 'the5fire',  # session.user.username,
             "created_time": str(message_data.get("created_time")),
+            "is_mine": True,
         }
         return json.dumps(result)

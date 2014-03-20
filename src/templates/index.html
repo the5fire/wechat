@@ -5,6 +5,7 @@
     <title>Wechat</title>
     <link rel="stylesheet" class="ui" href="/static/css/semantic.min.css"/>
     <link rel="stylesheet" class="ui" href="/static/css/body.css"/>
+    <link rel="stylesheet" class="ui" href="/static/css/chat.css"/>
     <style>
         .main.container {
             padding-top:45px;
@@ -48,10 +49,10 @@
                 </div>
                 <form class="ui reply form">
                     <div class="field">
-                        <textarea></textarea>
+                        <textarea id="comment"></textarea>
                     </div>
-                    <div class="ui fluid blue labeled submit icon button">
-                        <i class="icon edit"></i> 我也来评论一下！
+                    <div id="submit" data="" class="ui fluid blue labeled submit icon button">
+                        <i class="icon edit"></i> 我也来说一句！
                     </div>
                 </form>
             </div>
@@ -76,13 +77,14 @@
 </script>
 
 <script type="text/template" id="message-template">
-    <div class="content <%= user_id %>" data="<%= id %>">
-        <a class="author <%= user_id %>"><%= user_name %></a>
-        <div class="metadata <%= user_id %>">
+<div class="content <% if(is_mine) { %> right <% } %>" data="<%= id %>">
+        <a class="author"><%= user_name %></a>
+        <br/>
+        <div class="metadata">
             <span class="date"><%= created_time %></span>
         </div>
         <div class="text">
-            <div class="ui pointing right label large">
+            <div class="ui pointing label large <% if(is_mine) { %> right <% } %>">
                 <p><%= content %></p>
             </div>
         </div>

@@ -1,3 +1,9 @@
-.selfmsg {
+div.right, div.right a.author, div.right div.metadata, div.right>div.text {
     float: right;
+}
+div.content {
+    width: 250px;
+}
+.comment {
+    min-height: 85px;
 }
