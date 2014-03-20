@@ -7,3 +7,10 @@ div.content {
 .comment {
     min-height: 85px;
 }
+#message_list {
+    height: 400px;
+    overflow-y: auto;
+}
+.label>p {
+    text-transform: none;
+}

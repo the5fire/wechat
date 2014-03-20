@@ -71,6 +71,8 @@ $(function(){
 
           messages.bind('add', this.addMessage);
           messages.bind('reset', this.resetMessage);
+
+          this.message_list_div = document.getElementById('message_list');
         },
 
         addTopic: function(topic) {
@@ -85,6 +87,7 @@ $(function(){
 
         resetMessage: function(){
             messages.each(this.addMessage);
+            this.message_list.scrollTop(this.message_list_div.scrollHeight);
         },
 
         saveMessage: function(evt) {
@@ -99,10 +102,12 @@ $(function(){
                 content: content,
                 topic_id: topic_id,
             });
+            self = this;
             message.save(null, {
                 success: function(model, response, options){
                     messages.add(response);
                     comment_box.val('');
+                    self.message_list.scrollTop(self.message_list_div.scrollHeight)
                 },
             });
         },
