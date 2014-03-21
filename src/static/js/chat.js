@@ -62,6 +62,7 @@ $(function(){
 
         events: {
             'click .submit': 'saveMessage',
+            'click .submit_topic': 'saveTopic',
         },
 
         initialize: function() {
@@ -108,6 +109,24 @@ $(function(){
                     messages.add(response);
                     comment_box.val('');
                     self.message_list.scrollTop(self.message_list_div.scrollHeight)
+                },
+            });
+        },
+
+        saveTopic: function(evt) {
+            var topic_title = $('#topic_title');
+            if (topic_title.val() == '') {
+                alert('主题不能为空！');
+                return false
+            }
+            var topic = new Topic({
+                title: topic_title.val(),
+            });
+            self = this;
+            topic.save(null, {
+                success: function(model, response, options){
+                    topics.add(response);
+                    topic_title.val('');
                 },
             });
         },
@@ -170,6 +189,7 @@ $(function(){
     appRouter.indexFlag = false;
     Backbone.history.start({pustState: true});
     if(appRouter.indexFlag == false) {
+        // 跳转到index
         appRouter.navigate('index', {trigger: true});
     }
 });

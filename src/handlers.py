@@ -103,12 +103,13 @@ class TopicHandler:
     def POST(self):
         data = web.data()
         data = json.loads(data)
-        if not session.user.id:
-            return bad_request('请先登录！')
+        # FIXME:
+        #if not session.user.id:
+            #return bad_request('请先登录！')
 
         topic_data = {
             "title": data.get('title'),
-            "owner_id": session.user.id,
+            "owner_id": 1,  # FIXME:session.user.id,
             "created_time": datetime.now(),
         }
 
@@ -120,7 +121,8 @@ class TopicHandler:
         result = {
             "id": topic_id,
             "title": topic_data.get('title'),
-            "owner_id": session.user.id,
+            "owner_id": 1,  # FIXME:session.user.id,
+            "owner_name": 'the5fire',  # FIXME:session.user.username
             "created_time": str(topic_data.get('created_time')),
         }
         return json.dumps(result)
@@ -159,7 +161,7 @@ class MessageHandler:
         message_data = {
             "content": data.get("content"),
             "topic_id": data.get("topic_id"),
-            "user_id": 1,  # session.user.id,
+            "user_id": 1,  # FIXME: session.user.id,
             "created_time": datetime.now(),
         }
         m_id = Message.create(**message_data)
@@ -167,8 +169,8 @@ class MessageHandler:
             "id": m_id,
             "content": message_data.get("content"),
             "topic_id": message_data.get("topic_id"),
-            "user_id": 1,  # session.user.id,
-            "user_name": 'the5fire',  # session.user.username,
+            "user_id": 1,  # FIXME: session.user.id,
+            "user_name": 'the5fire',  # FIXME: session.user.username,
             "created_time": str(message_data.get("created_time")),
             "is_mine": True,
         }
