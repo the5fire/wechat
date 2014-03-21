@@ -26,3 +26,17 @@ div.content {
 .label>p {
     text-transform: none;
 }
+/*login style*/
+#wrapper {
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    background: #fff;
+}
+#login {
+    padding-top: 200px;
+}

@@ -16,7 +16,6 @@
 <!-- Top Bar  -->
 <div class="ui fixed transparent inverted main menu">
     <div class="container">
-        <a class="launch item"><i class="icon list layout"></i> 内容</a>
         <div class="title item">
             <b>We Chat</b> 在线聊天系统
         </div>
@@ -24,6 +23,46 @@
         <div class="right menu">
             <div class="title item">
                 Backbonejs交流群：308466740
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="wrapper" style="display: block; z-index: 998;">
+    <div class="container">
+        <div id="login" class="ui two column relaxed grid">
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <div class="field">
+                        <label>用户名</label>
+                        <input id="login_username" placeholder="用户名" type="text">
+                    </div>
+                    <div class="field">
+                        <label>密码</label>
+                        <input id="login_pwd" type="password">
+                    </div>
+                    <div class="ui blue login_submit button">登录</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <h3 class="ui header">注册</h3>
+                    <div class="field">
+                        <label>用户名</label>
+                        <input id="reg_username" placeholder="用户名" type="text">
+                    </div>
+                    <div class="field">
+                        <label>密码</label>
+                        <input id="reg_pwd" type="password">
+                    </div>
+                    <div class="inline field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="terms">
+                            <label for="terms">我同意the5fire's WeChat网的服务条款。</label>
+                        </div>
+                    </div>
+                    <div class="ui blue regist_submit button">注册</div>
+                </div>
             </div>
         </div>
     </div>
@@ -69,6 +108,7 @@
         </div>
     </div>
 
+<!-- template -->
 
 <script type="text/template" id="topic-template">
     <a href="#topic/<%= id %>">
