@@ -16,8 +16,7 @@ def sha1(data):
 
 
 def bad_request(message):
-    result = json.dumps({'message': message})
-    raise web.HTTPError(status=400, data=result)
+    return web.BadRequest(message=message)
 
 
 # 首页
@@ -27,7 +26,12 @@ class IndexHandler:
         return render.index()
 
 
-class RegisteHandler:
+class UserHandler:
+    def GET(self):
+        # 获取当前登录的用户数据
+        user = session.user
+        return json.dumps(user)
+
     def POST(self):
         data = web.data()
         data = json.loads(data)
@@ -49,8 +53,12 @@ class RegisteHandler:
         except sqlite3.IntegrityError:
             return bad_request('用户名已存在!')
 
+        user = User.get_by_id(user_id)
+        session.login = True
+        session.user = user
+
         result = {
-            'user_id': user_id,
+            'id': user_id,
             'username': username,
         }
         return json.dumps(result)

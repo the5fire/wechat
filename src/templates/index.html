@@ -33,6 +33,7 @@
         <div id="login" class="ui two column relaxed grid">
             <div class="column">
                 <div class="ui fluid form segment">
+                    <h3 class="ui header">登录</h3>
                     <div class="field">
                         <label>用户名</label>
                         <input id="login_username" placeholder="用户名" type="text">
@@ -55,13 +56,17 @@
                         <label>密码</label>
                         <input id="reg_pwd" type="password">
                     </div>
+                    <div class="field">
+                        <label>重复密码</label>
+                        <input id="reg_pwd_repeat" type="password">
+                    </div>
                     <div class="inline field">
                         <div class="ui checkbox">
                             <input type="checkbox" id="terms">
                             <label for="terms">我同意the5fire's WeChat网的服务条款。</label>
                         </div>
                     </div>
-                    <div class="ui blue regist_submit button">注册</div>
+                    <div class="ui blue registe_submit button">注册</div>
                 </div>
             </div>
         </div>
@@ -86,7 +91,7 @@
     </div>
 
     <!-- Message -->
-    <div  class="ui column grid" id="message_section">
+    <div  id="message_section" class="ui column grid hide" style="display:none">
         <div class="column">
             <div class="circular ui button"><a href="#index">返回列表</a></div>
             <div class="ui piled blue segment">

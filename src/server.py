@@ -8,8 +8,8 @@ urls = (
     '/topic', 'TopicHandler',
     '/topic/(\d+)', 'TopicHandler',
     '/message', 'MessageHandler',
-    '/user', 'RegisteHandler',
-    '/user/(\d+)', 'RegisteHandler',
+    '/user', 'UserHandler',
+    '/user/(\d+)', 'UserHandler',
     '/login', 'LoginHandler',
     '/logout', 'LogoutHandler',
 )
@@ -26,7 +26,7 @@ if web.config.get('_session') is None:
     web.config._session = session
 
 from handlers import (  # NOQA
-    IndexHandler, RegisteHandler,
+    IndexHandler, UserHandler,
     LoginHandler, LogoutHandler,
     TopicHandler, MessageHandler
 )
