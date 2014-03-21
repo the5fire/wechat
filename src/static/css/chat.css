@@ -1,3 +1,15 @@
+body {
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    background: #FCFCFC url(../images/bg.jpg) repeat;
+    margin: 0px;
+    padding: 0px;
+    color: #555555;
+    min-width: 320px;
+}
+.container {
+    width: 915px;
+    margin: 0px auto;
+}
 div.right, div.right a.author, div.right div.metadata, div.right>div.text {
     float: right;
 }
