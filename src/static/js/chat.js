@@ -63,34 +63,36 @@ $(function(){
         events: {
             'click .submit': 'saveMessage',
             'click .submit_topic': 'saveTopic',
+            'keypress #comment': 'saveMessageEvent',
         },
 
         initialize: function() {
-          _.bindAll(this, 'addTopic', 'resetMessage', 'addMessage');
+            _.bindAll(this, 'addTopic', 'addMessage');
 
-          topics.bind('add', this.addTopic);
+            topics.bind('add', this.addTopic);
 
-          messages.bind('add', this.addMessage);
-          messages.bind('reset', this.resetMessage);
+            // 定义消息列表池，每个topic有自己的message collection
+            // 这样保证每个主题下得消息不冲突
+            this.message_pool = {};
 
-          this.message_list_div = document.getElementById('message_list');
+            this.message_list_div = document.getElementById('message_list');
         },
 
         addTopic: function(topic) {
-          var view = new TopicView({model: topic});
-          this.topic_list.append(view.render().el);
+            var view = new TopicView({model: topic});
+            this.topic_list.append(view.render().el);
         },
 
         addMessage: function(message) {
-          var view = new MessageView({model: message});
-          this.message_list.append(view.render().el);
+            var view = new MessageView({model: message});
+            this.message_list.append(view.render().el);
         },
 
-        resetMessage: function(){
-            messages.each(this.addMessage);
-            this.message_list.scrollTop(this.message_list_div.scrollHeight);
+        saveMessageEvent: function(evt) {
+            if (evt.keyCode == 13) {
+                this.saveMessage(evt);
+            }
         },
-
         saveMessage: function(evt) {
             var comment_box = $('#comment')
             var content = comment_box.val();
@@ -98,17 +100,25 @@ $(function(){
                 alert('内容不能为空');
                 return false;
             }
-            var topic_id = $(evt.target).attr('topic_id');
+            var topic_id = comment_box.attr('topic_id');
             var message = new Message({
                 content: content,
                 topic_id: topic_id,
             });
             self = this;
+            var messages = this.message_pool[topic_id];
             message.save(null, {
                 success: function(model, response, options){
-                    messages.add(response);
                     comment_box.val('');
-                    self.message_list.scrollTop(self.message_list_div.scrollHeight)
+                    // 重新获取，看服务器端是否有更新
+                    // 比较丑陋的更新机制
+                    messages.fetch({
+                        data: {topic_id: topic_id},
+                        success: function(){
+                            self.message_list.scrollTop(self.message_list_div.scrollHeight);
+                            messages.add(response);
+                        },
+                    });
                 },
             });
         },
@@ -138,16 +148,27 @@ $(function(){
             this.message_list.html('');
         },
 
+        initMessage: function(topic_id) {
+            var messages = new Messages;
+            messages.bind('add', this.addMessage);
+            this.message_pool[topic_id] = messages;
+        },
+
         showMessage: function(topic_id) {
+            this.initMessage(topic_id);
+
             this.message_section.show();
             this.topic_list.hide();
             
             this.showMessageHead(topic_id);
-            $('#submit').attr('topic_id', topic_id);
+            $('#comment').attr('topic_id', topic_id);
 
+            var messages = this.message_pool[topic_id];
             messages.fetch({
-                url: '/message?topic_id=' + topic_id,
-                reset: true,
+                data: {topic_id: topic_id},
+                success: function(resp) {
+                    self.message_list.scrollTop(self.message_list_div.scrollHeight)
+                }
             });
         },
 
