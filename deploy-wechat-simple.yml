@@ -1,16 +1,16 @@
 ---
-- hosts: local  # hosts中指定
+- hosts: speedy-host1  # hosts中指定
   remote_user: the5fire  # 如果和当前用户一样，则无需指定
   tasks:
     - name: check out wechat
-      git: dest=~/demos/wechat repo=https://github.com/the5fire/wechat
+      git: dest=~/wechat-env/wechat repo=https://github.com/the5fire/wechat
            update=yes
     - name: make virtualenv
-      shell: 'virtualenv ~/demos'
+      shell: 'virtualenv ~/wechat-env'
     - name: install requirements
-      pip: requirements=~/demos/wechat/requirements.txt 
-           virtualenv=~/demos
+      pip: requirements=~/wechat-env/wechat/requirements.txt 
+            virtualenv=~/wechat-env
     - name: init database
-      shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/demos
+      shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/wechat-env
     - name: run manage.py
-      shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/demos
+      shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/wechat-env
