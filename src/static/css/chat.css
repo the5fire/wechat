@@ -16,6 +16,9 @@ div.right, div.right a.author, div.right div.metadata, div.right>div.text {
 div.content {
     width: 250px;
 }
+#main {
+    min-height: 700px;
+}
 .comment {
     min-height: 85px;
 }
@@ -44,7 +47,7 @@ div.content {
     display: none;
 }
 footer {
-    position: absolute;
+    position: relative;
     margin: 0 -2.5%;
     width: 100%;
     background: #fff;
