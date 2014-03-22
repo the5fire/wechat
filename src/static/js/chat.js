@@ -265,6 +265,7 @@ $(function(){
             // 初始化项目, 显示首页
             this.appView = new AppView();
             this.loginView = new LoginView();
+            this.indexFlag = false;
         },
 
         login: function(){
@@ -275,12 +276,15 @@ $(function(){
             if (g_user.id != undefined) {
                 this.appView.showTopic();
                 this.loginView.hide();
+                this.indexFlag = true;  // 标志已经到达主页了
             }
         },
 
         topic: function(topic_id) {
             if (g_user.id != undefined) {
                 this.appView.showMessage(topic_id);
+                this.loginView.hide();
+                this.indeFlag = true;  // 标志已经到达主页了
             }
         },
     });
@@ -294,7 +298,7 @@ $(function(){
             if(g_user.id === undefined) {
                 // 跳转到登录页面
                 appRouter.navigate('login', {trigger: true});
-            } else {
+            } else if (appView.indexFlag == false){
                 // 跳转到首页
                 appRouter.navigate('index', {trigger: true});
             }
