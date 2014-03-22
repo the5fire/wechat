@@ -25,6 +25,15 @@
                 Backbonejs交流群：308466740
             </div>
         </div>
+        <div id="user_info" class="right menu">
+            <div class="title item">
+                <i class="icon user"></i>
+                the5fire
+            </div>
+            <a class="popup icon github item" href="/logout" title="退出登录">
+                退出登录
+            </a>
+        </div>
     </div>
 </div>
 
@@ -101,14 +110,14 @@
                 <div id="message_list" class="ui comments">
                     <!-- comments section -->
                 </div>
-                <form class="ui reply form">
+                <div class="ui reply form">
                     <div class="field">
                         <input type="text" id="comment"/>
                     </div>
                     <div id="submit" data="" class="ui fluid blue labeled submit icon button">
                         <i class="icon edit"></i> 我也来说一句！
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -138,7 +147,7 @@
         <div class="metadata">
             <span class="date"><%= created_time %></span>
         </div>
-        <div class="text">
+        <div class="text" style="min-width:55px">
             <div class="ui pointing label large <% if(is_mine) { %> right <% } %>">
                 <p><%= content %></p>
             </div>

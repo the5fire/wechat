@@ -284,7 +284,7 @@ $(function(){
             if (g_user.id != undefined) {
                 this.appView.showMessage(topic_id);
                 this.loginView.hide();
-                this.indeFlag = true;  // 标志已经到达主页了
+                this.indexFlag = true;  // 标志已经到达主页了
             }
         },
     });
@@ -295,10 +295,11 @@ $(function(){
         success: function(model, resp, options){
             g_user = resp;
             Backbone.history.start({pustState: true});
+
             if(g_user.id === undefined) {
                 // 跳转到登录页面
                 appRouter.navigate('login', {trigger: true});
-            } else if (appView.indexFlag == false){
+            } else if (appRouter.indexFlag == false){
                 // 跳转到首页
                 appRouter.navigate('index', {trigger: true});
             }
