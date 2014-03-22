@@ -87,10 +87,10 @@ class LoginHandler:
 
 
 class LogoutHandler:
-    def POST(self):
+    def GET(self):
         session.login = False
         session.user = None
-        return json.dumps({"message": "success"})
+        return web.tempredirect('/#login')
 
 
 class TopicHandler:

@@ -40,3 +40,6 @@ div.content {
 #login {
     padding-top: 200px;
 }
+.hide {
+    display: none;
+}

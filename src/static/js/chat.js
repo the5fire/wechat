@@ -254,6 +254,16 @@ $(function(){
         },
     });
 
+    var UserView = Backbone.View.extend({
+        el: "#user_info",
+        username: $('#username'),
+
+        show: function(username) {
+            this.username.html(username);
+            this.$el.show();
+        },
+    });
+
     var AppRouter = Backbone.Router.extend({
         routes: {
             "login": "login",
@@ -265,6 +275,7 @@ $(function(){
             // 初始化项目, 显示首页
             this.appView = new AppView();
             this.loginView = new LoginView();
+            this.userView = new UserView();
             this.indexFlag = false;
         },
 
@@ -273,16 +284,18 @@ $(function(){
         },
 
         index: function(){
-            if (g_user.id != undefined) {
+            if (g_user && g_user.id != undefined) {
                 this.appView.showTopic();
+                this.userView.show(g_user.username);
                 this.loginView.hide();
                 this.indexFlag = true;  // 标志已经到达主页了
             }
         },
 
         topic: function(topic_id) {
-            if (g_user.id != undefined) {
+            if (g_user && g_user.id != undefined) {
                 this.appView.showMessage(topic_id);
+                this.userView.show(g_user.username);
                 this.loginView.hide();
                 this.indexFlag = true;  // 标志已经到达主页了
             }
@@ -296,7 +309,7 @@ $(function(){
             g_user = resp;
             Backbone.history.start({pustState: true});
 
-            if(g_user.id === undefined) {
+            if(g_user === null || g_user.id === undefined) {
                 // 跳转到登录页面
                 appRouter.navigate('login', {trigger: true});
             } else if (appRouter.indexFlag == false){
