@@ -43,3 +43,11 @@ div.content {
 .hide {
     display: none;
 }
+footer {
+    position: absolute;
+    margin: 0 -2.5%;
+    width: 100%;
+    background: #fff;
+    z-index: 999;
+    bottom: 33px;
+}
