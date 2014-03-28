@@ -1,2 +1,2 @@
 #!/bin/bash
-nohup python server.py 9999 > access.log 2>&1 &
+nohup python server.py > access.log 2>&1 &

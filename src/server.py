@@ -41,7 +41,7 @@ from handlers import (  # NOQA
 if __name__ == "__main__":
     print 'http://localhost:8080'
     server.SocketIOServer(
-        ('localhost', 8080),
+        ('localhost', 9999),
         application,
         resource="socket.io",
         policy_server=True,
