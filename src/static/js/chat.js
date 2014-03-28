@@ -4,6 +4,9 @@
  * date: 2014-03-16
  * */
 $(function(){
+    WEB_SOCKET_SWF_LOCATION = "/static/WebSocketMain.swf";
+    WEB_SOCKET_DEBUG = true;
+
     var User = Backbone.Model.extend({
         urlRoot: '/user',
     });
@@ -75,6 +78,7 @@ $(function(){
             // 定义消息列表池，每个topic有自己的message collection
             // 这样保证每个主题下得消息不冲突
             this.message_pool = {};
+            this.socket = null;
 
             this.message_list_div = document.getElementById('message_list');
         },
@@ -87,6 +91,7 @@ $(function(){
         addMessage: function(message) {
             var view = new MessageView({model: message});
             this.message_list.append(view.render().el);
+            self.message_list.scrollTop(self.message_list_div.scrollHeight);
         },
 
         saveMessageEvent: function(evt) {
@@ -111,15 +116,10 @@ $(function(){
             message.save(null, {
                 success: function(model, response, options){
                     comment_box.val('');
-                    // 重新获取，看服务器端是否有更新
-                    // 比较丑陋的更新机制
-                    messages.fetch({
-                        data: {topic_id: topic_id},
-                        success: function(){
-                            self.message_list.scrollTop(self.message_list_div.scrollHeight);
-                            messages.add(response);
-                        },
-                    });
+                    // 发送成功之后，通过socket再次发送
+                    messages.add(response);
+                    // FIXME: 最后可通过socket直接通信并保存
+                    self.socket.emit('message', response);
                 },
             });
         },
@@ -166,12 +166,33 @@ $(function(){
             this.showMessageHead(topic_id);
             $('#comment').attr('topic_id', topic_id);
 
+            this.reloadSocket(topic_id);
+
             var messages = this.message_pool[topic_id];
             messages.fetch({
                 data: {topic_id: topic_id},
                 success: function(resp) {
                     self.message_list.scrollTop(self.message_list_div.scrollHeight)
                 }
+            });
+        },
+
+        reloadSocket: function(topic_id) {
+            if (this.socket !=null && this.socket.topic_id != topic_id) {
+                this.socket.disconnect();
+                this.socket = null;
+            }
+            if (this.socket == null) {
+                this.socket = io.connect();
+            }
+            var messages = this.message_pool[topic_id];
+            this.socket.on('connect', function(){
+                self.socket.emit('topic', topic_id);
+                // 监听message事件，添加对话到messages中
+                self.socket.on('message', function(response) {
+                    var model = JSON.parse(response);
+                    messages.add(model);
+                });
             });
         },
 
@@ -184,6 +205,7 @@ $(function(){
                 }
             });
         },
+
     });
 
 
