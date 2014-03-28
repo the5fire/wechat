@@ -12,5 +12,6 @@
       shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/wechat-env
     - name: kill exist pid
       shell: ps aux | grep 'python server.py' | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+      ignore_errors: yes
     - name: run server.py
       shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/wechat-env
