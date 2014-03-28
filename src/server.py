@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
+from gevent import monkey
+monkey.patch_all()
+
 import web
 from web.httpserver import StaticMiddleware
+from socketio import server
+
 
 urls = (
     '/', 'IndexHandler',  # 返回首页
@@ -12,6 +17,7 @@ urls = (
     '/user/(\d+)', 'UserHandler',
     '/login', 'LoginHandler',
     '/logout', 'LogoutHandler',
+    '/socket.io/.*', 'SocketHandler',
 )
 
 app = web.application(urls, globals())
@@ -28,12 +34,14 @@ if web.config.get('_session') is None:
 from handlers import (  # NOQA
     IndexHandler, UserHandler,
     LoginHandler, LogoutHandler,
-    TopicHandler, MessageHandler
+    TopicHandler, MessageHandler,
+    SocketHandler,
 )
 
-
-def main():
-    app.run()
-
 if __name__ == "__main__":
-    main()
+    print 'http://localhost:8080'
+    server.SocketIOServer(
+        ('localhost', 8080),
+        application,
+        policy_server=False
+    ).serve_forever()

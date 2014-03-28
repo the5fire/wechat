@@ -1,10 +1,14 @@
 #coding:utf-8
+import copy
 import json
 import hashlib
 import sqlite3
 from datetime import datetime
 
 import web
+from socketio import socketio_manage
+from socketio.namespace import BaseNamespace
+from socketio.mixins import RoomsMixin, BroadcastMixin
 
 from models import Message, User, Topic
 
@@ -182,3 +186,35 @@ class MessageHandler:
             "is_mine": True,
         }
         return json.dumps(result)
+
+
+class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
+    def on_topic(self, topic_id):
+        """ 加入以某个主题id为房间
+
+        客户端进入聊天室界面先发送此请求，确定房间号
+        """
+        room_num = 'room_%s' % topic_id
+        self.socket.session['room'] = room_num
+        print 'join', room_num
+        self.join(room_num)
+
+    def on_message(self, model):
+        model['is_mine'] = False
+        message = json.dumps(model)
+        print message
+        self.emit_to_room(
+            self.socket.session['room'],
+            'message',
+            message,
+        )
+
+    def recv_disconnect(self):
+        print 'DISCONNECT!!!!!!!!!!!!!!!!!!!!!!!'
+
+
+class SocketHandler:
+    def GET(self):
+        context = copy.copy(web.ctx.environ)
+        context.update({'session': session})
+        socketio_manage(context, {'': ChatNamespace}, web.ctx)
