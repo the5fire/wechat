@@ -1,1 +1,4 @@
 web.py
+gevent==1.0
+gevent-socketio==0.3.6
+gevent-websocket==0.9.3
