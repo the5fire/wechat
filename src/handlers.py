@@ -190,7 +190,9 @@ class MessageHandler:
 
 class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_go_out(self):
-        self.leave(self.socket.session.get('room'))
+        room_num = self.socket.session.get('room')
+        print 'go_out', room_num
+        self.leave(room_num)
 
     def on_topic(self, topic_id):
         """ 加入以某个主题id为房间
@@ -205,7 +207,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_message(self, model):
         model['is_mine'] = False
         message = json.dumps(model)
-        print message
         self.emit_to_room(
             self.socket.session['room'],
             'message',
