@@ -12,5 +12,5 @@
             virtualenv=~/wechat-env
     - name: init database
       shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/wechat-env
-    - name: run manage.py
+    - name: run server.py
       shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/wechat-env

@@ -5,8 +5,6 @@
     - name: check out wechat
       git: dest=~/wechat-env/wechat repo=https://github.com/the5fire/wechat
            update=yes
-    - name: make virtualenv
-      shell: 'virtualenv ~/wechat-env'
     - name: install requirements
       pip: requirements=~/wechat-env/wechat/requirements.txt 
             virtualenv=~/wechat-env
@@ -14,5 +12,5 @@
       shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/wechat-env
     - name: kill exist pid
       shell: ps aux | grep 'python server.py' | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    - name: run manage.py
+    - name: run server.py
       shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/wechat-env
