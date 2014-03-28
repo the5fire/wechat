@@ -43,5 +43,7 @@ if __name__ == "__main__":
     server.SocketIOServer(
         ('localhost', 8080),
         application,
-        policy_server=False
+        resource="socket.io",
+        policy_server=True,
+        policy_listener=('0.0.0.0', 10843),
     ).serve_forever()

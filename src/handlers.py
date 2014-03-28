@@ -189,6 +189,9 @@ class MessageHandler:
 
 
 class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
+    def on_go_out(self):
+        self.leave(self.socket.session.get('room'))
+
     def on_topic(self, topic_id):
         """ 加入以某个主题id为房间
 
@@ -211,6 +214,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
     def recv_disconnect(self):
         print 'DISCONNECT!!!!!!!!!!!!!!!!!!!!!!!'
+        self.disconnect(silent=True)
 
 
 class SocketHandler:
