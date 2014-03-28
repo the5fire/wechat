@@ -1,0 +1,18 @@
+---
+- hosts: speedy-host1  # hosts中指定
+  remote_user: the5fire  # 如果和当前用户一样，则无需指定
+  tasks:
+    - name: check out wechat
+      git: dest=~/wechat-env/wechat repo=https://github.com/the5fire/wechat
+           update=yes
+    - name: make virtualenv
+      shell: 'virtualenv ~/wechat-env'
+    - name: install requirements
+      pip: requirements=~/wechat-env/wechat/requirements.txt 
+            virtualenv=~/wechat-env
+    - name: init database
+      shell: . ./bin/activate && cd wechat/src && ./init_sqlite.py chdir=~/wechat-env
+    - name: kill exist pid
+      shell: ps aux | grep 'python server.py' | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    - name: run manage.py
+      shell: . ./bin/activate && cd wechat/src &&  ./run.sh chdir=~/wechat-env
