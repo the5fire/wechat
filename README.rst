@@ -32,3 +32,10 @@ messages:
 ~~~~~~~~~~~~~~~~~~~~
 
 .. image:: data/chat.png
+
+
+TODO:
+------------------------
+
+1. replace gevent-socketio with tornado.
+2. use socketio save message data.
