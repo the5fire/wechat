@@ -14,6 +14,8 @@ from models import Message, User, Topic
 
 session = web.config._session
 
+CACHE_USER = {}
+
 
 def sha1(data):
     return hashlib.sha1(data).hexdigest()
@@ -107,7 +109,11 @@ class TopicHandler:
         result = []
         for t in topics:
             topic = dict(t)
-            user = User.get_by_id(t.owner_id)
+            try:
+                user = CACHE_USER[t.owner_id]
+            except KeyError:
+                user = User.get_by_id(t.owner_id)
+                CACHE_USER[t.owner_id] = user
             topic['owner_name'] = user.username
             result.append(topic)
         return json.dumps(result)
@@ -155,19 +161,24 @@ class MessageHandler:
             messages = Message.get_all()
 
         result = []
+        current_user_id = session.user.id
         for m in messages:
-            user = User.get_by_id(m.user_id)
+            try:
+                user = CACHE_USER[m.user_id]
+            except KeyError:
+                user = User.get_by_id(m.user_id)
+                CACHE_USER[m.user_id] = user
             message = dict(m)
             message['user_name'] = user.username
-            message['is_mine'] = (session.user == user)
+            message['is_mine'] = (current_user_id == user.id)
             result.append(message)
         return json.dumps(result)
 
     def POST(self):
         data = web.data()
         data = json.loads(data)
-        #if not (session.user and session.user.id):
-            #return bad_request("请先登录！")
+        if not (session.user and session.user.id):
+            return bad_request("请先登录！")
 
         message_data = {
             "content": data.get("content"),
@@ -191,8 +202,9 @@ class MessageHandler:
 class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_go_out(self):
         room_num = self.socket.session.get('room')
-        print 'go_out', room_num
-        self.leave(room_num)
+        if room_num:
+            print 'go_out', room_num
+            self.leave(room_num)
 
     def on_topic(self, topic_id):
         """ 加入以某个主题id为房间
@@ -221,5 +233,4 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 class SocketHandler:
     def GET(self):
         context = copy.copy(web.ctx.environ)
-        context.update({'session': session})
         socketio_manage(context, {'': ChatNamespace}, web.ctx)
