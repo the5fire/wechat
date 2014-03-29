@@ -39,8 +39,6 @@ $(function(){
         },
     });
 
-    var messages = new Messages;
-
     var MessageView = Backbone.View.extend({
         tagName:  "div class='comment'",
         templ: _.template($('#message-template').html()),
