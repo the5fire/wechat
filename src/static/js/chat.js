@@ -50,6 +50,15 @@ $(function(){
         },
     });
 
+    var UserView = Backbone.View.extend({
+        el: "#user_info",
+        username: $('#username'),
+
+        show: function(username) {
+            this.username.html(username);
+            this.$el.show();
+        },
+    });
 
     var AppView = Backbone.View.extend({
         el: "#main",
@@ -249,16 +258,6 @@ $(function(){
                     appRouter.navigate('index', {trigger: true});
                 }
             });
-        },
-    });
-
-    var UserView = Backbone.View.extend({
-        el: "#user_info",
-        username: $('#username'),
-
-        show: function(username) {
-            this.username.html(username);
-            this.$el.show();
         },
     });
 
