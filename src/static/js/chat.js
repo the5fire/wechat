@@ -68,7 +68,7 @@ $(function(){
     var AppView = Backbone.View.extend({
         el: "#main",
         topic_list: $("#topic_list"),
-        topic_form: $("#topic_form"),
+        topic_section: $("#topic_section"),
         message_section: $("#message_section"),
         message_list: $("#message_list"),
         message_head: $("#message_head"),
@@ -152,8 +152,7 @@ $(function(){
 
         showTopic: function(){
             topics.fetch();
-            this.topic_list.show();
-            this.topic_form.show();
+            this.topic_section.show();
             this.message_section.hide();
             this.message_list.html('');
 
@@ -176,8 +175,7 @@ $(function(){
             this.initMessage(topic_id);
 
             this.message_section.show();
-            this.topic_list.hide();
-            this.topic_form.hide();
+            this.topic_section.hide();
             
             this.showMessageHead(topic_id);
             $('#comment').attr('topic_id', topic_id);
