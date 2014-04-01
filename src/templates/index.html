@@ -6,8 +6,6 @@
     <link rel="stylesheet" class="ui" href="/static/css/semantic.min.css"/>
     <link rel="stylesheet" class="ui" href="/static/css/body.css"/>
     <link rel="stylesheet" class="ui" href="/static/css/chat.css"/>
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/socket.io.js"></script>
 
     <style>
         .main.container {
@@ -172,9 +170,28 @@
         </div>
     </div>
     </footer>
-    <script src="/static/js/json2.js"></script>
-    <script src="/static/js/underscore.js"></script>
-    <script src="/static/js/backbone.js"></script>
-    <script src="/static/js/chat.js"></script>
+    <script src="/static/js/sea-debug.js"></script>
+    <script src="/static/js/socket.io.js"></script>
+    <script>
+// Set configuration
+    seajs.config({
+        base: '/static',
+        alias: {
+            "jquery": "js/jquery",   // 改造过的jquery
+            "underscore": "js/underscore",  //同上
+            "backbone": "js/backbone", //同上
+            "socketio": "js/socket.io", //同上
+
+            "user": "js/user", 
+            "message": "js/message",
+            "topic": "js/topic",
+            "appview": "js/appview",
+            "approuter": "js/approuter",
+        },
+    });
+
+    seajs.use('js/app');
+    </script>
+
 </body>
 </html>

@@ -39,9 +39,10 @@ from handlers import (  # NOQA
 )
 
 if __name__ == "__main__":
-    print 'http://localhost:8080'
+    port = 8080
+    print 'http://localhost:%s' % port
     server.SocketIOServer(
-        ('localhost', 9999),
+        ('localhost', port),
         application,
         resource="socket.io",
         policy_server=True,

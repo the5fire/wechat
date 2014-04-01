@@ -5,6 +5,7 @@
 //     For all details and documentation:
 //     http://backbonejs.org
 
+define(function(require, exports, module) {
 (function(root, factory) {
 
   // Set up Backbone appropriately for the environment. Start with AMD.
@@ -1606,3 +1607,4 @@
   return Backbone;
 
 }));
+});
