@@ -8,11 +8,12 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     var AppRouter = require('approuter');
-    var User = require('user');
-    var exports = require('exports');
+    var UserModule = require('user');
 
-    var appRouter = new AppRouter();
-    var g_user = new User;
+    var User = UserModule.User;
+
+    var g_user = new User();
+    var appRouter = new AppRouter(g_user);
     g_user.fetch({
         success: function(model, resp, options){
             g_user = resp;

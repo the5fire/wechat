@@ -15,6 +15,10 @@ define(function(require, exports, module) {
     var LoginView = Backbone.View.extend({
         el: "#login",
         wrapper: $('#wrapper'),
+
+        initialize: function(appRouter) {
+            this.appRouter = appRouter;
+        },
         
         events: {
             'keypress #login_pwd': 'loginEvent',
@@ -44,12 +48,13 @@ define(function(require, exports, module) {
                 username: username_input.val(),
                 password: pwd_input.val(),
             });
+            var self = this;
             u.save(null, {
                 url: '/login',
                 success: function(model, resp, options){
-                    g_user = resp;
+                    self.appRouter.g_user = resp;
                     // 跳转到index
-                    appRouter.navigate('index', {trigger: true});
+                    self.appRouter.navigate('index', {trigger: true});
                 }
             });
         },
@@ -69,11 +74,12 @@ define(function(require, exports, module) {
                 password: reg_pwd_input.val(),
                 password_repeat: reg_pwd_repeat_input.val(),
             });
+            var self = this;
             u.save(null, {
                 success: function(model, resp, options){
-                    g_user = resp;
+                    self.appRouter.g_user = resp;
                     // 跳转到index
-                    appRouter.navigate('index', {trigger: true});
+                    self.appRouter.navigate('index', {trigger: true});
                 }
             });
         },
@@ -88,4 +94,10 @@ define(function(require, exports, module) {
             this.$el.show();
         },
     });
+
+    module.exports = {
+        "User": User,
+        "UserView": UserView,
+        "LoginView": LoginView,
+    };
 });

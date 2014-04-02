@@ -4,6 +4,10 @@
  * date: 2014-03-16
  * */
 define(function(require, exports, module) {
+    var $ = require('jquery');
+    var Backbone = require('backbone');
+    var _ = require('underscore');
+
     var Topic = Backbone.Model.extend({
         urlRoot: '/topic',
     });
@@ -25,7 +29,8 @@ define(function(require, exports, module) {
     });
 
     module.exports = {
-        Topics: Topics,
-        TopicView: TopicView,
+        "Topic": Topic,
+        "Topics": Topics,
+        "TopicView": TopicView,
     }
 });

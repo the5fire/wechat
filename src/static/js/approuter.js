@@ -8,6 +8,9 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     var AppView = require('appview');
+    var UserModule = require('user');
+    var LoginView = UserModule.LoginView;
+    var UserView = UserModule.UserView;
 
     var AppRouter = Backbone.Router.extend({
         routes: {
@@ -16,12 +19,15 @@ define(function(require, exports, module) {
             "topic/:id" : "topic",
         },
 
-        initialize: function(){
+        initialize: function(g_user){
+            // 设置全局用户
+            this.g_user = g_user;
             // 初始化项目, 显示首页
             this.appView = new AppView();
-            this.loginView = new LoginView();
+            this.loginView = new LoginView(this);
             this.userView = new UserView();
             this.indexFlag = false;
+
         },
 
         login: function(){
@@ -29,18 +35,18 @@ define(function(require, exports, module) {
         },
 
         index: function(){
-            if (g_user && g_user.id != undefined) {
+            if (this.g_user && this.g_user.id != undefined) {
                 this.appView.showTopic();
-                this.userView.show(g_user.username);
+                this.userView.show(this.g_user.username);
                 this.loginView.hide();
                 this.indexFlag = true;  // 标志已经到达主页了
             }
         },
 
         topic: function(topic_id) {
-            if (g_user && g_user.id != undefined) {
+            if (this.g_user && this.g_user.id != undefined) {
                 this.appView.showMessage(topic_id);
-                this.userView.show(g_user.username);
+                this.userView.show(this.g_user.username);
                 this.loginView.hide();
                 this.indexFlag = true;  // 标志已经到达主页了
             }

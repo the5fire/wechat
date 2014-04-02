@@ -7,6 +7,18 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
+    var TopicModule = require('topic');
+    var MessageModule = require('message');
+
+    var Topics = TopicModule.Topics;
+    var TopicView = TopicModule.TopicView;
+    var Topic = TopicModule.Topic;
+
+    var Message = MessageModule.Message;
+    var Messages = MessageModule.Messages;
+    var MessageView = MessageModule.MessageView;
+
+    var topics = new Topics();
 
     WEB_SOCKET_SWF_LOCATION = "/static/WebSocketMain.swf";
     WEB_SOCKET_DEBUG = true;

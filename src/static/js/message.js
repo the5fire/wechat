@@ -27,4 +27,9 @@ define(function(require, exports, module) {
           return this;
         },
     });
+    module.exports = {
+        "Messages": Messages,
+        "Message": Message,
+        "MessageView": MessageView,
+    }
 });
