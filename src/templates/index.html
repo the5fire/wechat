@@ -6,8 +6,6 @@
     <link rel="stylesheet" class="ui" href="/static/css/semantic.min.css"/>
     <link rel="stylesheet" class="ui" href="/static/css/body.css"/>
     <link rel="stylesheet" class="ui" href="/static/css/chat.css"/>
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/socket.io.js"></script>
 
     <style>
         .main.container {
@@ -172,9 +170,42 @@
         </div>
     </div>
     </footer>
-    <script src="/static/js/json2.js"></script>
-    <script src="/static/js/underscore.js"></script>
-    <script src="/static/js/backbone.js"></script>
-    <script src="/static/js/chat.js"></script>
+    <script data-main="/static/js/app.js" src="/static/js/require.js"></script>
+
+    <script src="/static/js/socket.io.js"></script>
+    <script>
+    require.config({
+        baseUrl: '/static',
+        shim: {
+            underscore: {
+                exports: '_'
+            },
+            backbone: {
+                deps: [
+                    'underscore',
+                    'jquery'
+                ],
+                exports: 'Backbone'
+            },
+            backboneLocalstorage: {
+                deps: ['backbone'],
+                exports: 'Store'
+            }
+        },
+        paths: {
+            "jquery": "js/jquery",   // 改造过的jquery
+            "underscore": "js/underscore",  //同上
+            "backbone": "js/backbone", //同上
+
+            "user": "js/user", 
+            "message": "js/message",
+            "topic": "js/topic",
+            "appview": "js/appview",
+            "approuter": "js/approuter",
+            "app": "js/app",
+        }
+    });
+    </script>
+
 </body>
 </html>
