@@ -129,6 +129,9 @@ $(function(){
                     // FIXME: 最后可通过socket直接通信并保存
                     socket.emit('message', response);
                 },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
+                }
             });
         },
 
@@ -147,6 +150,9 @@ $(function(){
                     topics.add(response);
                     topic_title.val('');
                 },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
+                }
             });
         },
 
@@ -193,6 +199,9 @@ $(function(){
                 data: {topic_id: topic_id},
                 success: function(resp) {
                     self.message_list.scrollTop(self.message_list_div.scrollHeight)
+                },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
                 }
             });
         },
@@ -203,6 +212,9 @@ $(function(){
             topic.fetch({
                 success: function(resp, model, options){
                     self.message_head.html(model.title);
+                },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
                 }
             });
         },
@@ -248,6 +260,9 @@ $(function(){
                     g_user = resp;
                     // 跳转到index
                     appRouter.navigate('index', {trigger: true});
+                },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
                 }
             });
         },
@@ -272,6 +287,9 @@ $(function(){
                     g_user = resp;
                     // 跳转到index
                     appRouter.navigate('index', {trigger: true});
+                },
+                error: function(model, resp, options) {
+                    alert(resp.responseText);
                 }
             });
         },
@@ -340,5 +358,8 @@ $(function(){
                 appRouter.navigate('index', {trigger: true});
             }
         },
+        error: function(model, resp, options) {
+            alert(resp.responseText);
+        }
     }); // 获取当前用户
 });
