@@ -1,50 +1,18 @@
 #!/usr/bin/env python
 #coding:utf-8
-from gevent import monkey
-monkey.patch_all()
+import sys
 
-import web
-from web.httpserver import StaticMiddleware
-from socketio import server
+import tornado.ioloop
+
+from application import application
 
 
-urls = (
-    '/', 'IndexHandler',  # 返回首页
-    '/topic', 'TopicHandler',
-    '/topic/(\d+)', 'TopicHandler',
-    '/message', 'MessageHandler',
-    '/user', 'UserHandler',
-    '/user/(\d+)', 'UserHandler',
-    '/login', 'LoginHandler',
-    '/logout', 'LogoutHandler',
-    '/socket.io/.*', 'SocketHandler',
-)
-
-app = web.application(urls, globals())
-application = app.wsgifunc(StaticMiddleware)
-
-if web.config.get('_session') is None:
-    session = web.session.Session(
-        app,
-        web.session.DiskStore('sessions'),
-        initializer={'login': False, 'user': None}
-    )
-    web.config._session = session
-
-from handlers import (  # NOQA
-    IndexHandler, UserHandler,
-    LoginHandler, LogoutHandler,
-    TopicHandler, MessageHandler,
-    SocketHandler,
-)
+PORT = '8080'
 
 if __name__ == "__main__":
-    PORT = 8080
-    print 'http://localhost:%s' % PORT
-    server.SocketIOServer(
-        ('localhost', PORT),
-        application,
-        resource="socket.io",
-        policy_server=True,
-        policy_listener=('0.0.0.0', 10843),
-    ).serve_forever()
+    if len(sys.argv) > 1:
+        PORT = sys.argv[1]
+    application.listen(PORT)
+    print 'Development server is running at http://127.0.0.1:%s/' % PORT
+    print 'Quit the server with CONTROL-C'
+    tornado.ioloop.IOLoop.instance().start()
