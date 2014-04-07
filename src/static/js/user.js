@@ -55,6 +55,9 @@ define(function(require, exports, module) {
                     self.appRouter.g_user = resp;
                     // 跳转到index
                     self.appRouter.navigate('index', {trigger: true});
+                },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
                 }
             });
         },
@@ -80,6 +83,9 @@ define(function(require, exports, module) {
                     self.appRouter.g_user = resp;
                     // 跳转到index
                     self.appRouter.navigate('index', {trigger: true});
+                },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
                 }
             });
         },

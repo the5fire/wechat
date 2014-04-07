@@ -22,7 +22,7 @@ def sha1(data):
 
 
 def bad_request(message):
-    return web.BadRequest(message=message)
+    raise web.BadRequest(message=message)
 
 
 # 首页
