@@ -96,6 +96,9 @@ define(function(require, exports, module) {
                     // FIXME: 最后可通过socket直接通信并保存
                     socket.emit('message', response);
                 },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
+                }
             });
         },
 
@@ -114,6 +117,9 @@ define(function(require, exports, module) {
                     topics.add(response);
                     topic_title.val('');
                 },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
+                }
             });
         },
 
@@ -160,6 +166,9 @@ define(function(require, exports, module) {
                 data: {topic_id: topic_id},
                 success: function(resp) {
                     self.message_list.scrollTop(self.message_list_div.scrollHeight)
+                },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
                 }
             });
         },
@@ -170,6 +179,9 @@ define(function(require, exports, module) {
             topic.fetch({
                 success: function(resp, model, options){
                     self.message_head.html(model.title);
+                },
+                error: function(model, resp, options){
+                    alert(resp.responseText);
                 }
             });
         },
