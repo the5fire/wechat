@@ -119,10 +119,13 @@ class TopicHandler:
         return json.dumps(result)
 
     def POST(self):
-        data = web.data()
-        data = json.loads(data)
         if not session.user.id:
             return bad_request('请先登录！')
+        if session.user.username != 'the5fire':
+            return bad_request('sorry，你没有创建权限')
+
+        data = web.data()
+        data = json.loads(data)
 
         topic_data = {
             "title": data.get('title'),
