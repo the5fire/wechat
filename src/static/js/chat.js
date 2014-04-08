@@ -16,6 +16,18 @@ $(function(){
         socket.disconnect();
     });
 
+    var ori_sync = Backbone.sync;
+
+    Backbone.sync = function(method, model, options) {
+        if (model instanceof Message && method === 'create') {
+            socket.emit('message', model.attributes);
+            // 错误处理没做
+            $('#comment').val('');
+        } else {
+            return ori_sync(method, model, options);
+        };
+    };
+
     var User = Backbone.Model.extend({
         urlRoot: '/user',
     });
@@ -121,18 +133,7 @@ $(function(){
                 topic_id: topic_id,
             });
             var messages = this.message_pool[topic_id];
-            message.save(null, {
-                success: function(model, response, options){
-                    comment_box.val('');
-                    // 发送成功之后，通过socket再次发送
-                    messages.add(response);
-                    // FIXME: 最后可通过socket直接通信并保存
-                    socket.emit('message', response);
-                },
-                error: function(model, resp, options) {
-                    alert(resp.responseText);
-                }
-            });
+            message.save(); // 依赖上面对sync的重载
         },
 
         saveTopic: function(evt) {
@@ -191,9 +192,7 @@ $(function(){
             socket.emit('topic', topic_id);
             // 监听message事件，添加对话到messages中
             socket.on('message', function(response) {
-                debugger;
-                var model = JSON.parse(response);
-                messages.add(model);
+                messages.add(response);
             });
             messages.fetch({
                 data: {topic_id: topic_id},
