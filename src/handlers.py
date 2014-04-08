@@ -96,6 +96,7 @@ class LogoutHandler:
     def GET(self):
         session.login = False
         session.user = None
+        session.kill()
         return web.tempredirect('/#login')
 
 
@@ -119,7 +120,7 @@ class TopicHandler:
         return json.dumps(result)
 
     def POST(self):
-        if not session.user.id:
+        if not session.user or not session.user.id:
             return bad_request('请先登录！')
         if session.user.username != 'the5fire':
             return bad_request('sorry，你没有创建权限')
@@ -236,4 +237,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 class SocketHandler:
     def GET(self):
         context = copy.copy(web.ctx.environ)
-        socketio_manage(context, {'': ChatNamespace}, web.ctx)
+        socketio_manage(context, {'': ChatNamespace})
+        # 重新载入session数据，因为session在socket请求中改变了
+        session._load()

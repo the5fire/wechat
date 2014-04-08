@@ -31,6 +31,8 @@ if web.config.get('_session') is None:
     )
     web.config._session = session
 
+#web.config.debug = False
+
 from handlers import (  # NOQA
     IndexHandler, UserHandler,
     LoginHandler, LogoutHandler,
