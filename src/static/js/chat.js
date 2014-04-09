@@ -16,18 +16,6 @@ $(function(){
         socket.disconnect();
     });
 
-    var ori_sync = Backbone.sync;
-
-    Backbone.sync = function(method, model, options) {
-        if (model instanceof Message && method === 'create') {
-            socket.emit('message', model.attributes);
-            // 错误处理没做
-            $('#comment').val('');
-        } else {
-            return ori_sync(method, model, options);
-        };
-    };
-
     var User = Backbone.Model.extend({
         urlRoot: '/user',
     });
@@ -38,6 +26,15 @@ $(function(){
 
     var Message = Backbone.Model.extend({
         urlRoot: '/message',
+        sync: function(method, model, options) {
+            if (method === 'create') {
+                socket.emit('message', model.attributes);
+                // 错误处理没做
+                $('#comment').val('');
+            } else {
+                return Backbone.sync(method, model, options);
+            };
+        },
     });
 
     var Topics = Backbone.Collection.extend({
